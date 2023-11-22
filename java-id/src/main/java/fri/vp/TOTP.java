@@ -136,6 +136,6 @@ public class TOTP {
 
     public static void main(String[] args) {
         System.out.println(generateTOTP256("581f22628ce7b73da43abfceb41c94a5",
-                String.valueOf(System.currentTimeMillis() / 1000), "6"));
+                String.valueOf(System.currentTimeMillis()), "6"));
     }
 }
