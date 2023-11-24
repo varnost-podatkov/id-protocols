@@ -1,4 +1,13 @@
-package fri.vp;
+package fri.vp; /**
+ * Copyright (c) 2011 IETF Trust and the persons identified as
+ * authors of the code. All rights reserved.
+ * <p>
+ * Redistribution and use in source and binary forms, with or without
+ * modification, is permitted pursuant to, and subject to the license
+ * terms contained in, the Simplified BSD License set forth in Section
+ * 4.c of the IETF Trust's Legal Provisions Relating to IETF Documents
+ * (http://trustee.ietf.org/license-info).
+ */
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -7,13 +16,37 @@ import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 
 
+/**
+ * This is an example implementation of the OATH
+ * TOTP algorithm.
+ * Visit www.openauthentication.org for more information.
+ *
+ * @author Johan Rydell, PortWise, Inc.
+ */
+
 public class TOTP {
+
+    private TOTP() {
+    }
+
+    /**
+     * This method uses the JCE to provide the crypto algorithm.
+     * HMAC computes a Hashed Message Authentication Code with the
+     * crypto hash algorithm as a parameter.
+     *
+     * @param crypto:   the crypto algorithm (HmacSHA1, HmacSHA256,
+     *                  HmacSHA512)
+     * @param keyBytes: the bytes to use for the HMAC key
+     * @param text:     the message or text to be authenticated
+     */
 
     private static byte[] hmac_sha(String crypto, byte[] keyBytes,
                                    byte[] text) {
         try {
-            final Mac hmac = Mac.getInstance(crypto);
-            final SecretKeySpec macKey = new SecretKeySpec(keyBytes, "RAW");
+            Mac hmac;
+            hmac = Mac.getInstance(crypto);
+            SecretKeySpec macKey =
+                    new SecretKeySpec(keyBytes, "RAW");
             hmac.init(macKey);
             return hmac.doFinal(text);
         } catch (GeneralSecurityException gse) {
@@ -21,6 +54,13 @@ public class TOTP {
         }
     }
 
+
+    /**
+     * This method converts a HEX string to Byte[]
+     *
+     * @param hex: the HEX string
+     * @return: a byte array
+     */
 
     private static byte[] hexStr2Bytes(String hex) {
         // Adding one byte to get the right conversion
@@ -49,7 +89,9 @@ public class TOTP {
      * {@link truncationDigits} digits
      */
 
-    public static String generateTOTP(String key, String time, String returnDigits) {
+    public static String generateTOTP(String key,
+                                      String time,
+                                      String returnDigits) {
         return generateTOTP(key, time, returnDigits, "HmacSHA1");
     }
 
@@ -65,7 +107,9 @@ public class TOTP {
      * {@link truncationDigits} digits
      */
 
-    public static String generateTOTP256(String key, String time, String returnDigits) {
+    public static String generateTOTP256(String key,
+                                         String time,
+                                         String returnDigits) {
         return generateTOTP(key, time, returnDigits, "HmacSHA256");
     }
 
@@ -80,7 +124,9 @@ public class TOTP {
      * {@link truncationDigits} digits
      */
 
-    public static String generateTOTP512(String key, String time, String returnDigits) {
+    public static String generateTOTP512(String key,
+                                         String time,
+                                         String returnDigits) {
         return generateTOTP(key, time, returnDigits, "HmacSHA512");
     }
 
@@ -101,8 +147,8 @@ public class TOTP {
                                       String time,
                                       String returnDigits,
                                       String crypto) {
-        int codeDigits = Integer.decode(returnDigits).intValue();
-        String result = null;
+        int codeDigits = Integer.decode(returnDigits);
+        String result;
 
         // Using the counter
         // First 8 bytes are for the movingFactor
@@ -113,7 +159,6 @@ public class TOTP {
         // Get the HEX in a Byte[]
         byte[] msg = hexStr2Bytes(time);
         byte[] k = hexStr2Bytes(key);
-
         byte[] hash = hmac_sha(crypto, k, msg);
 
         // put selected bytes into result int
@@ -134,8 +179,23 @@ public class TOTP {
         return result;
     }
 
-    public static void main(String[] args) {
-        System.out.println(generateTOTP256("581f22628ce7b73da43abfceb41c94a5",
-                String.valueOf(System.currentTimeMillis()), "6"));
+
+    public static String generateTOTPSHA256(String keyHex, long time, long interval, long digits) {
+        final long l = time / 30;
+        final StringBuilder timeString = new StringBuilder(Long.toHexString(l).toUpperCase());
+        while (timeString.length() < 16) {
+            timeString.insert(0, "0");
+        }
+
+        return generateTOTP256(keyHex, timeString.toString(), String.valueOf(digits));
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        while (true) {
+            final long time = System.currentTimeMillis() / 1000;
+            final String otp = generateTOTPSHA256("581f22628ce7b73da43abfceb41c94a5", time, 30, 6);
+            System.out.println(otp);
+            Thread.sleep(1000);
+        }
     }
 }
