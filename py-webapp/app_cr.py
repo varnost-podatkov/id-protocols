@@ -1,6 +1,8 @@
 from cryptography.hazmat.primitives import constant_time
 from flask import Flask, request
 
+import vp_library
+
 app = Flask(__name__)
 
 # Baza uporabnikov
@@ -36,7 +38,7 @@ def validate_user_pass():
 
     assert username in users, "Invalid username."  # hitro preverjanje
 
-    challenge = challenge_response.generate_challenge(6)
+    challenge = vp_library.generate_challenge()
     users[username]["challenge"] = challenge
 
     return f'''
@@ -61,7 +63,7 @@ def validate_response():
     # ne pa tudi zakaj
     assert username in users, "Invalid username"
 
-    recomputed = challenge_response.generate_response_hmac_256(
+    recomputed = vp_library.generate_response_hmac_256(
         bytes.fromhex(users[username]["key"]),
         users[username]["challenge"])
     if not constant_time.bytes_eq(recomputed.encode("utf8"), otp.encode("utf8")):

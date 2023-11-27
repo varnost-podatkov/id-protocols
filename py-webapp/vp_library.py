@@ -1,6 +1,5 @@
 # Import necessary modules
 import os
-import secrets
 import string
 
 from cryptography.exceptions import InvalidKey
@@ -21,9 +20,14 @@ def generate_response_hmac_256(key: bytes, challenge: str) -> str:
     return "{:06d}".format(number)
 
 
-def generate_challenge(digits: int) -> string:
+def generate_challenge() -> string:
     """Ustvari naključno 6-mestno številko"""
-    return ''.join(secrets.choice(string.digits) for _ in range(digits))
+    rnd = os.urandom(4)
+    number = int.from_bytes(rnd, byteorder="big")
+    number = number & 0x7FFFFFFF  # nastavi MSB na 0 (da bo pozitivno)
+    number = number % 1000000  # ostanek pri deljenju z 10^6 da 6-mestno število
+    # vrnemo 6 mestni niz: če je število manj-mestno, ga podložimo z ničlami
+    return "{:06d}".format(number)
 
 
 def hash_password(password: str) -> (bytes, bytes):
