@@ -16,13 +16,13 @@ import static org.openauthentication.otp.TOTP.generateTOTP256;
 public class OTP {
 
     /**
-     * Generates a time-based one-time password
+     * Ustvari enkratno geslo na podlagi časovne vrednosti
      *
-     * @param key      Key to be used
-     * @param time     current time in unix format
-     * @param interval the time interval
-     * @param digits   number of digits to display the result
-     * @return Computed OTP
+     * @param key      ključ
+     * @param time     trenuten čas v formatu UNIX
+     * @param interval časovni interval
+     * @param digits   število znakov
+     * @return Enkratno geslo
      */
     public static String generateTOTPSHA256(byte[] key, long time, long interval, long digits) {
         final long l = time / interval;
@@ -37,44 +37,46 @@ public class OTP {
     }
 
     /**
-     * Generates a hmac-based one-time password.
+     * Ustvari enkratno geslo na osnovi funkcije HMAC-SHA1
      *
-     * @param key    to be used
-     * @param value  the value from which the password will be computed
-     * @param digits the number of digits for the OTP
-     * @return Computed OTP
+     * @param key    ključ
+     * @param value  vrednost, iz katere se geslo izpelje
+     * @param digits število znakov v geslu
+     * @return Izračunano geslo
      */
     public static String generateHOTPSHA1(byte[] key, int value, int digits) throws NoSuchAlgorithmException, InvalidKeyException {
         return OneTimePasswordAlgorithm.generateOTP(key, value, digits, false, 16);
     }
 
     /**
-     * Computes a one-time password in a challenge-response protocol
+     * Izračuna enkratno geslo v protokolu poziv-odziv
      *
-     * @param key       to be used
-     * @param challenge the challenge from the server
-     * @return The response value
+     * @param key       ključ
+     * @param challenge vrednost, ki predstavlja poziv
+     * @return Vrednost odziva
      */
     public static String generateResponseHMAC256(byte[] key, String challenge) throws NoSuchAlgorithmException, InvalidKeyException {
         // Instanciraj MAC
         final Mac mac = Mac.getInstance("HmacSHA256");
 
-        // Nalozi kljuc
+        // Nalozi ključ
         mac.init(new SecretKeySpec(key, "HmacSHA256"));
 
-        // Izracunaj znacko
+        // Izračunaj značko
         final byte[] responseFull = mac.doFinal(challenge.getBytes(StandardCharsets.UTF_8));
 
-        // nalozi znacko
+        // naloži značko v ByteBuffer
         final ByteBuffer buff = ByteBuffer.wrap(responseFull);
 
         // uporabi pravilo debelega konca
         buff.order(ByteOrder.BIG_ENDIAN);
 
-        // Preberi INT in postavi 32. bit na 0 (označuje predznak in želimo zgolj pozitivna števila)
+        // Preberi celo število (32 bitov) in postavi 32. bit na 0
+        // (označuje predznak, mi pa želimo zgolj pozitivna števila)
         final int response = buff.getInt() & 0x7FFFFFFF;
 
-        // Vrni 6 mest (tudi če so na začetku ničle)
+        // Vrni 6 mestno geslo
+        // Če je rezultat manj mesten, začetek podloži z ničlami
         return String.format("%06d%n", response % 1000000);
     }
 }

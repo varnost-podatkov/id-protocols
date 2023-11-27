@@ -5,7 +5,7 @@ import vp_library
 app = Flask(__name__)
 
 # Baza uporabnikov
-# - Kljuc predstavlja uporabnika, vrednosti pa sta par (sol, zgosceno geslo)
+# - Kljuc predstavlja uporabnika, vrednosti pa sta par (sol, zgoščeno geslo)
 # - Podan je primer za Ano in za geslo "vp"
 _salt, _hashed = vp_library.hash_password("vp")
 users = {
