@@ -2,12 +2,11 @@
 import os
 import secrets
 import string
-import time
 
-from cryptography.hazmat.primitives.hashes import SHA256
-from cryptography.hazmat.primitives.twofactor import InvalidToken
-from cryptography.hazmat.primitives.twofactor.totp import TOTP
+from cryptography.hazmat.primitives import constant_time
 from flask import Flask, request
+
+import challenge_response
 
 app = Flask(__name__)
 
@@ -15,7 +14,8 @@ app = Flask(__name__)
 app_key = os.urandom(16)
 
 # Uporabniki
-
+# Vsak uporabnik ima isti ključ -- to je napačno
+# Primer je poenostavljen zaradi demonstracije
 users = {
     'ana': {
         "key": "581f22628ce7b73da43abfceb41c94a5",
@@ -35,53 +35,56 @@ users = {
 @app.route('/', methods=['GET'])
 def login():
     return '''
-        <form action="/validate-user-password" method="post">
+        <form action="/validate-user" method="post">
             Username: <input type="text" name="username"><br>
-            Username: <input type="password" name="password"><br>
             <br>
             <input type="submit" value="Login">
         </form>
     '''
 
 
-@app.route('/validate-user-password', methods=['POST'])
+@app.route('/validate-user', methods=['POST'])
 def validate_user_pass():
+    username = request.form['username']
+
+    assert username in users, "Invalid username."  # hitro preverjanje
+
+    challenge = ''.join(secrets.choice(string.digits) for _ in range(6))
+    users[username]["challenge"] = challenge
+
+    return f'''
+        <form action="/validate-response" method="post">
+            Username: {username}<br><input type="hidden" name="username" value="{username}"><br>
+            Password: <input type="password" name="password"><br>
+            Challenge: <b>{challenge}</b><br>
+            OTP: <input type="text" name="otp"><br>
+            <br>
+            <input type="submit" value="Login">
+        </form>
+    '''
+
+
+@app.route('/validate-response', methods=['POST'])
+def validate_response():
+    # Get username, password and OTP
     username = request.form['username']
     password = request.form['password']
-
-    if username in users and users[username]["password"] == password:
-        challenge = ''.join(secrets.choice(string.digits) for _ in range(6))
-        users[username]["challenge"] = challenge
-
-
-        # generate challenge
-        # write it to DB
-
-
-    if username in users:
-        totp = TOTP(bytes.fromhex(users[username]), 6, SHA256(), 30)
-        try:
-            totp.verify(otp.encode("ascii"), int(time.time()))
-            return f"Welcome, {username}, OTP was correct."
-        except InvalidToken:
-            return "Invalid OTP."
-    return 'Invalid username.'
-
-
-@app.route('/validate', methods=['POST'])
-def validate_user_pass():
-    # Get username and password from the form
-    username = request.form['username']
     otp = request.form['otp']
 
-    if username in users:
-        totp = TOTP(bytes.fromhex(users[username]), 6, SHA256(), 30)
-        try:
-            totp.verify(otp.encode("ascii"), int(time.time()))
-            return f"Welcome, {username}, OTP was correct."
-        except InvalidToken:
-            return "Invalid OTP."
-    return 'Invalid username.'
+    # Napake so zgolj v pomoč pri razhroščevanju
+    # V produkciji ne povemo, kaj je razlog
+    assert username in users, "Invalid username"
+    assert users[username]["password"] == password, "Invalid password"
+    assert len(otp) == 6, "Invalid OTP"
+
+    # TODO Validate otp
+    recomputed = challenge_response.generate_response_hmac_256(
+        bytes.fromhex(users[username]["key"]),
+        users[username]["challenge"])
+    if not constant_time.bytes_eq(recomputed.encode("utf8"), otp.encode("utf8")):
+        return "Invalid OTP"
+
+    return f"Welcome, {username}, OTP was correct."
 
 
 # Run the application if the script is executed
