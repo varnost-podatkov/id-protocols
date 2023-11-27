@@ -1,9 +1,11 @@
 # Import necessary modules
+import secrets
+import string
 
 from cryptography.hazmat.primitives import hashes, hmac
 
 
-def generate_response_hmac_256(key: object, challenge: object) -> object:
+def generate_response_hmac_256(key: bytes, challenge: str) -> str:
     mac_algorithm = hmac.HMAC(key, hashes.SHA256())
     mac_algorithm.update(challenge.encode("utf8"))
     mac_tag = mac_algorithm.finalize()
@@ -12,5 +14,5 @@ def generate_response_hmac_256(key: object, challenge: object) -> object:
     return "{:06d}".format(number)
 
 
-key = "581f22628ce7b73da43abfceb41c94a5"
-print(generate_response_hmac_256(bytes.fromhex(key), "challenge"))
+def generate_challenge(digits: int) -> string:
+    return ''.join(secrets.choice(string.digits) for _ in range(digits))
