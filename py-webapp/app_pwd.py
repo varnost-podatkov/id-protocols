@@ -62,6 +62,5 @@ def validate_user_pass():
     return f"Welcome, {username}, the passsword was correct."
 
 
-# Run the application if the script is executed
 if __name__ == '__main__':
     app.run(debug=True)

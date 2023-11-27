@@ -6,6 +6,8 @@ from flask import Flask, request
 app = Flask(__name__)
 
 # Uporabniki
+# - Vsak uporabnik bi moral imeti isti kljuc
+# - A primer namenoma poenostavljamo
 users = {
     'ana': {
         "key": "581f22628ce7b73da43abfceb41c94a5",
@@ -19,7 +21,6 @@ users = {
 }
 
 
-# Spletna stran za vnos podatkov
 @app.route('/', methods=['GET'])
 def login():
     return '''
@@ -32,7 +33,6 @@ def login():
     '''
 
 
-# Endpoint for checking the validity of the provided username/password pair
 @app.route('/validate', methods=['POST'])
 def validate_user_pass():
     username = request.form['username']

@@ -1,4 +1,3 @@
-# Import necessary modules
 import time
 
 from cryptography.hazmat.primitives.hashes import SHA256
@@ -9,6 +8,8 @@ from flask import Flask, request
 app = Flask(__name__)
 
 # Uporabniki
+# - Vsak uporabnik bi moral imeti isti kljuc
+# - A primer namenoma poenostavljamo
 users = {
     'ana': "581f22628ce7b73da43abfceb41c94a5",
     'bor': "581f22628ce7b73da43abfceb41c94a5",
@@ -44,6 +45,5 @@ def validate_user_pass():
     return 'Invalid username.'
 
 
-# Run the application if the script is executed
 if __name__ == '__main__':
     app.run(debug=True)

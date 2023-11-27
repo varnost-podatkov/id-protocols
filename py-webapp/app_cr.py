@@ -1,10 +1,5 @@
-# Import necessary modules
-import os
-
 from cryptography.hazmat.primitives import constant_time
 from flask import Flask, request
-
-import vp_library
 
 app = Flask(__name__)
 
@@ -75,6 +70,5 @@ def validate_response():
     return f"Welcome, {username}, OTP was correct."
 
 
-# Run the application if the script is executed
 if __name__ == '__main__':
     app.run(debug=True)
