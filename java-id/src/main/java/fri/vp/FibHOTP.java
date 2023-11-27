@@ -16,9 +16,5 @@ public class FibHOTP {
         // Gesla naj bodo 6-mestna, izračunana naj bodo s HMAC-SHA1.
         // Gesla izpišite na standardni izhod
         // Pri prijavi  v spletno aplikacijo morate uporabiti pravilnega
-        for (int i = 0; i < 10; i++) {
-            final String otp = generateHOTPSHA1(key, i, 6);
-            System.out.println(i + " " + otp);
-        }
     }
 }

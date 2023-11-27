@@ -16,11 +16,5 @@ public class FibChallengeResponse {
         // izračunajte odziv s pomočjo ustrezne funkcije v razredu OTP
         // odziv izpišite na standardni izhod
 
-        System.out.print("Enter OTP challenge: ");
-
-        final Scanner sc = new Scanner(System.in);
-        final String challenge = sc.nextLine();
-
-        System.out.println(generateResponseHMAC256(key, challenge));
     }
 }

@@ -12,12 +12,7 @@ def generate_response_hmac_256(key: bytes, challenge: str) -> str:
 
     # Pri implementaciji si pomagajate z Javansko različico:
     #  String generateResponseHMAC256(byte[] key, String challenge)
-    mac_algorithm = hmac.HMAC(key, hashes.SHA256())
-    mac_algorithm.update(challenge.encode("utf8"))
-    mac_tag = mac_algorithm.finalize()
-
-    number = (int.from_bytes(mac_tag[0:4], byteorder="big") & 0x7FFFFFFF) % 1000000
-    return "{:06d}".format(number)
+    return "TODO"
 
 
 def generate_challenge() -> string:
@@ -45,9 +40,5 @@ def hash_password(password: str) -> (bytes, bytes):
 def verify_password(attempt: str, salt: bytes, hashed: bytes) -> bool:
     """Vzame niz poskus, bajte sol in bajte, ki predstavljajo zgoščeno vrednost
     pravega gesla in vrne True ntk. je poskus gesla pravilen. Sicer vrne False."""
-    kdf = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    try:
-        kdf.verify(attempt.encode("utf8"), hashed)
-        return True
-    except InvalidKey:
-        return False
+
+    return False

@@ -14,8 +14,5 @@ public class FibTOTP {
         // ustrezno popravite, da bo vsebovala sekunde
         // interval naj bo dolg 30 sekund, geslo pa 6 mest
         // Izpišite ga na standardni zaslon
-        final long time = System.currentTimeMillis() / 1000;
-        final String otp = generateTOTPSHA256(key, time, 30, 6);
-        System.out.println(otp);
     }
 }

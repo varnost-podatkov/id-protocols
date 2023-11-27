@@ -43,7 +43,7 @@ def validate_user_pass():
 
     return f'''
         <form action="/validate-response" method="post">
-            Username: {username}<br><input type="hidden" name="username" value="{username}"><br>
+            Username: {username}<br><input type="hidden" name="username" value="{username}">
             Challenge: <b>{challenge}</b><br>
             OTP: <input type="text" name="otp"><br>
             <br>
