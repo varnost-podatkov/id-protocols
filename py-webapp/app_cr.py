@@ -4,7 +4,7 @@ import os
 from cryptography.hazmat.primitives import constant_time
 from flask import Flask, request
 
-import challenge_response
+import vp_library
 
 app = Flask(__name__)
 
