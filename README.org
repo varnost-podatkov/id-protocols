@@ -16,11 +16,11 @@ pip install flask
 Če delamo na računalniku v učilnici na UL FRI:
 
 #+begin_src txt
-pip --user install flask
+pip install --user flask
 #+end_src
 
 ** Naloga 1
-Pri tej nalogi bomo uporabili le Python. V datoteki =app_pw.py= je implementirana spletna aplikacija z ogrodju Flask.
+Pri tej nalogi bomo uporabili le Python. V datoteki =app_pwd.py= je implementirana spletna aplikacija z ogrodju Flask.
 
 Če modul poženemo, lahko aplikacijo obiščemo na spletnem naslovu http://localhost:5000. Pomembna sta sledeča naslova URL:
 - http://localhost:5000/ -- začetna stran za prijavo

@@ -40,7 +40,7 @@ def validate_user_pass():
 
     if username in users:
         hotp = HOTP(bytes.fromhex(users[username]["key"]), 6, SHA1())
-        for i in range(10):
+        for i in range(users[username]["counter"], users[username]["counter"] + 10):
             try:
                 counter = users[username]["counter"] + i
                 hotp.verify(otp.encode("utf8"), counter)
