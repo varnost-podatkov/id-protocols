@@ -2,8 +2,6 @@ package fri.vp;
 
 import java.util.HexFormat;
 
-import static fri.vp.OTP.generateTOTPSHA256;
-
 public class FibTOTP {
     public static void main(String[] args) {
         // Uporabite spodnji ključ

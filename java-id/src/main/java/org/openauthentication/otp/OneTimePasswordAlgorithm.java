@@ -137,8 +137,6 @@ public class OneTimePasswordAlgorithm {
      *                         bits of the last byte of the MAC are
      *                         used to determine the start offset.
      * @return A numeric String in base 10 that includes
-     * {@link codeDigits} digits plus the optional checksum
-     * digit if requested.
      * @throws NoSuchAlgorithmException if no provider makes
      *                                  either HmacSHA1 or HMAC-SHA-1
      *                                  digest algorithms available.

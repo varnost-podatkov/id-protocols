@@ -7,7 +7,7 @@
   - Takih, ki delujejo na osnovi časa.
   - Takih, ki delujejo s protokolom poziv-odziv.
 ** Priprava
-Tokrat bomo naše rešitve implementirali v spletno aplikacijo. Zato je pogoj za poganjanje naše rešitve knjižnica =flask=. Namestimo jo s preprosim ukazom:
+Tokrat bomo naše rešitve implementirali v spletno aplikacijo. Zato je pogoj za poganjanje naše rešitve knjižnica =flask=. Namestimo jo s preprostim ukazom:
 
 #+begin_src txt
 pip install flask
@@ -45,6 +45,8 @@ Tokrat registracije ni, imamo pa veljavna uporabniška imena =ana, bor, cene=. V
 V Javanskem projektu odprite datoteko =FibHOTP.java= in jo po navodilu dokončajte. Po pravilni implementaciji se lahko uporabniki uspešno prijavijo v spletno aplikacijo tako, da podajo uporabniško ime in enkratno geslo.
 
 (V tem trenutku morate poganjati dva programa: =app_hotp.py= izvaja spletno aplikacijo, =FibHOTP.java= pa izračuna enkratno geslo.)
+
+Prepričajte se, da so gesla res /enkratna/: ko ga enkrat uporabite, ne deluje več in morate uporabiti naslednjega.
 
 Ko ste z nalogo končali, ugasnite proces spletne aplikacije.
 ** Naloga 3

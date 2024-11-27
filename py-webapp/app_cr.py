@@ -6,8 +6,7 @@ import vp_library
 app = Flask(__name__)
 
 # Baza uporabnikov
-# - Vsak uporabnik bi moral imeti isti kljuc
-# - A primer namenoma poenostavljamo
+# - Vsak bi moral imeti svoj kljuc, a namenoma poenostavljamo
 users = {
     'ana': {
         "key": "581f22628ce7b73da43abfceb41c94a5",
@@ -24,12 +23,14 @@ users = {
 @app.route('/', methods=['GET'])
 def login():
     return '''
+        <!doctype html>
+        <h1>Challenge-Response: Login</h1>
         <form action="/validate-user" method="post">
             Username: <input type="text" name="username"><br>
             <br>
             <input type="submit" value="Login">
         </form>
-    '''
+        <p>[ <a href="/">Log-in</a> ]'''
 
 
 @app.route('/validate-user', methods=['POST'])
@@ -42,6 +43,8 @@ def validate_user_pass():
     users[username]["challenge"] = challenge
 
     return f'''
+        <!doctype html>
+        <h1>Challenge-Response: Provide Response</h1>
         <form action="/validate-response" method="post">
             Username: {username}<br><input type="hidden" name="username" value="{username}">
             Challenge: <b>{challenge}</b><br>
@@ -49,7 +52,7 @@ def validate_user_pass():
             <br>
             <input type="submit" value="Login">
         </form>
-    '''
+        <p>[ <a href="/">Log-in</a> ]'''
 
 
 @app.route('/validate-response', methods=['POST'])
@@ -61,15 +64,22 @@ def validate_response():
     # Napake so zgolj v pomoč pri razhroščevanju
     # V produkciji bi povedali le, da prijava ni uspela
     # ne pa tudi zakaj
-    assert username in users, "Invalid username"
+    if username not in users:
+        message = "Invalid username"
 
     recomputed = vp_library.generate_response_hmac_256(
         bytes.fromhex(users[username]["key"]),
         users[username]["challenge"])
     if not constant_time.bytes_eq(recomputed.encode("utf8"), otp.encode("utf8")):
-        return "Invalid OTP"
+        message = "Invalid OTP"
 
-    return f"Welcome, {username}, OTP was correct."
+    message = f"Welcome, {username}, provided response was correct."
+
+    return f'''
+        <!doctype html>
+        <h1>Challenge-Response: Login status</h1>
+        <p>{message}
+        <p>[ <a href="/">Log-in</a> ]'''
 
 
 if __name__ == '__main__':

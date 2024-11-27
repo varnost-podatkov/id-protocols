@@ -25,13 +25,13 @@ def generate_challenge() -> string:
     return "{:06d}".format(number)
 
 
-def hash_password(password: str) -> (bytes, bytes):
+def hash_password(password: str) -> tuple[bytes, bytes]:
     """Iz podanega gesla izračuna zgoščeno vrednost s funkcijo scrypt.
 
-    Vrne par (sol, zgoščena) vrednost"""
+    Vrne par (sol, zgostitev)"""
     salt = os.urandom(16)
 
-    kdf = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
     hashed = kdf.derive(password.encode("utf8"))
 
     return salt, hashed
