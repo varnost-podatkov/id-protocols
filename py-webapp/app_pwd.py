@@ -26,7 +26,7 @@ def login():
         </form>
         <p>[
             <a href="/">Log-in</a> |
-            <a href= "/register">Register</a>
+            <a href="/register">Register</a>
         ]'''
 
 
@@ -43,7 +43,7 @@ def register():
         </form>
         <p>[
             <a href="/">Log-in</a> |
-            <a href= "/register">Register</a>
+            <a href="/register">Register</a>
         ]'''
 
 
@@ -64,7 +64,7 @@ def register_save():
         <p>Welcome, {username}, the registration was successful.
         <p>[
             <a href="/">Log-in</a> |
-            <a href= "/register">Register</a>
+            <a href="/register">Register</a>
         ]'''
 
 
@@ -84,7 +84,7 @@ def validate_user_pass():
         <p>{msg}
         <p>[
             <a href="/">Log-in</a> |
-            <a href= "/register">Register</a>
+            <a href="/register">Register</a>
         ]'''
 
 
