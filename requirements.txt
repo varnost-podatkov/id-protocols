@@ -1,5 +1,4 @@
-jupyterlab
-matplotlib
 cryptography
 flask
-
+jupyterlab
+matplotlib

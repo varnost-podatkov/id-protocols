@@ -1,0 +1,94 @@
+# Protokoli za istovetenje
+
+## Cilji laboratorije vaje
+
+- Implementirati varno shranjevanje gesel s pomočjo zgoščevalne funkcije `scrypt`
+- Implementirati prijavo v sistem s pomočjo različnih mehanizmov za ustvarjanje enkratnih gesel:
+  - Takih, ki temeljijo na overitveni kodi sporočila HMAC in števcih.
+  - Takih, ki delujejo na osnovi časa.
+  - Takih, ki delujejo s protokolom poziv-odziv.
+
+## Priprava
+
+Če uporabljamo Nix, v korenski mapi projekta zaženemo:
+
+```sh
+nix develop
+```
+
+Razvojno okolje uporablja Python 3.12, samodejno ustvari in aktivira `.venv` ter z `uv` namesti odvisnosti iz `requirements.txt`.
+
+Če Nixa ne uporabljamo, lahko vse odvisnosti namestimo v Pythonovo virtualno okolje:
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Tokrat bomo naše rešitve implementirali v spletno aplikacijo. Zato je pogoj za poganjanje naše rešitve knjižnica `flask`. Namestimo jo s preprostim ukazom:
+
+```sh
+pip install flask
+```
+
+Če delamo na računalniku v učilnici na UL FRI:
+
+```sh
+pip install --user flask
+```
+
+## Naloga 1
+
+Pri tej nalogi bomo uporabili le Python. V datoteki `app_pwd.py` je implementirana spletna aplikacija z ogrodju Flask.
+
+Če modul poženemo, lahko aplikacijo obiščemo na spletnem naslovu http://localhost:5000. Pomembna sta sledeča naslova URL:
+- http://localhost:5000/ -- začetna stran za prijavo
+- http://localhost:5000/register -- stran, ki omogoča registracijo uporabnika
+
+Aplikacija shranjuje prijavne podatke v globalni slovar `users`. Ključi predstavljajo uporabniška imena, vrednosti pa pare `(sol, zgoščeno_geslo)`.
+
+Preučite delovanje celotne aplikacije, nato pa implementirajte metodo `verify_password(attempt: str, salt: bytes, hashed: bytes) -> bool` v modulu `vp_library.py`
+
+Metoda sprejme tri argumente: poskus gesla, sol in zgoščeno vrednost pravega gesla. Metoda naj vrne `True` ntk. je podan poskus gesla pravilen. Gesla so zgoščena z zgoščevalno funkcijo `scrypt`.
+
+Pri preverjanju uporabite enake parametre kot so uporabljeni pri zgoščevanju v funkciji `hash_password(password: str) -> (bytes, bytes)`. Po potrebi uporabite dokumentacijo.
+
+Na koncu ugasnite program spletne aplikacije.
+
+## Naloga 2
+
+Sedaj bomo implementirali prijavo s pomočjo enkratnega gesla. Kot prvi primer bomo uporabili gesla, ki se izračunajo iz **števca s pomočjo overitvene kode sporočila** HMAC-SHA1.
+
+Spletna aplikacija ne potrebuje popravkov. Vseeno preučite kodo, da boste razumeli, kaj se dogaja. Ko aplikacijo poženete, jo lahko obiščete na naslovu http://localhost:5000/.
+
+Tokrat registracije ni, imamo pa veljavna uporabniška imena `ana, bor, cene`. Vaša naloga je, da implementirate Javanski program, ki generira enkratna gesla, ki omogočajo uporabnikom prijavo.
+
+V Javanskem projektu odprite datoteko `FibHOTP.java` in jo po navodilu dokončajte. Po pravilni implementaciji se lahko uporabniki uspešno prijavijo v spletno aplikacijo tako, da podajo uporabniško ime in enkratno geslo.
+
+(V tem trenutku morate poganjati dva programa: `app_hotp.py` izvaja spletno aplikacijo, `FibHOTP.java` pa izračuna enkratno geslo.)
+
+Prepričajte se, da so gesla res *enkratna*: ko ga enkrat uporabite, ne deluje več in morate uporabiti naslednjega.
+
+Ko ste z nalogo končali, ugasnite proces spletne aplikacije.
+
+## Naloga 3
+
+Tretja naloga je zelo podobna drugi, le da tokrat implementiramo enkratna gesla s pomočjo časa.
+
+Odprite in preučite spletno aplikacijo `app_totp.py`.
+
+Zatem implementirajte program za ustvarjanje enkratnih gesel v Javanskem projektu; datoteka se imenuje `FibTOTP.java`. Sledite navodilom v datoteki.
+
+Ko ste z nalogo končali, ugasnite proces spletne aplikacije.
+
+## Naloga 4
+
+Pri zadnji nalogi bomo implementirali primer protokola poziv-odziv. Spletna aplikacija je v datoteki `app_cr.py`, program za generiranje enkratnih gesel pa v `FibChallengeResponse.java`.
+
+Zaporedje relevantnih akcij je sledeče:
+1. Najprej strežnik ustvari poziv: gre za 6-mestno naključno število predstavljeno kot niz, ki ga vrne metoda `vp_library.generate_challenge() -> str`.
+2. Zatem je potrebno implementirati odziv, ki ga vrne Javanski program v datoteki `FibChallengeResponse.java`.
+3. Nazadnje je potrebno odziv preveriti na strežniku. Pri tem se uporabi metoda `generate_response_hmac_256(key: bytes, challenge: str) -> str`.
+
+Naloga od vas zahteva implementacijo 2. in 3. koraka. Preden pričnete, dobro preučite spletno aplikacijo ter relevantne metode v modulu `vp_library`.

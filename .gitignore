@@ -8,6 +8,7 @@ __pycache__/
 *.enc
 # Distribution / packaging
 .Python
+.venv/
 env/
 build/
 develop-eggs/
@@ -180,4 +181,3 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
-
