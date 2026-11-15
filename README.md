@@ -8,6 +8,10 @@
   - Takih, ki delujejo na osnovi časa.
   - Takih, ki delujejo s protokolom poziv-odziv.
 
+## Struktura projekta
+
+Oba programska dela sta v korenski mapi: Mavenov projekt določata `pom.xml` in `src/main/java/`, Pythonove datoteke `app_*.py` ter `vp_library.py` pa so ob njem. Spletne aplikacije zaganjamo iz korena, npr. `python app_pwd.py`. Za Javo potrebujemo JDK 17 ali novejši in Maven.
+
 ## Priprava
 
 Če uporabljamo Nix, v korenski mapi projekta zaženemo:
@@ -92,3 +96,9 @@ Zaporedje relevantnih akcij je sledeče:
 3. Nazadnje je potrebno odziv preveriti na strežniku. Pri tem se uporabi metoda `generate_response_hmac_256(key: bytes, challenge: str) -> str`.
 
 Naloga od vas zahteva implementacijo 2. in 3. koraka. Preden pričnete, dobro preučite spletno aplikacijo ter relevantne metode v modulu `vp_library`.
+
+## Oddaja
+
+Na Moodle oddajte `vp_library.py`, `FibHOTP.java`, `FibTOTP.java` in `FibChallengeResponse.java` kot posamezne izvorne datoteke, ne kot dodatni ZIP. Če uporabljate lastne pomožne datoteke, oddajte tudi te; pri celotni Mavenovi mapi ohranite strukturo `src/main/java/`. Knjižnice, `.venv/` in prevedene datoteke niso del oddaje.
+
+Ocenjuje se pet implementacij: dve Pythonovi funkciji in trije Javanski programi. Vsaka je vredna 1 točko za dejanski poskus, tudi če vsebuje napake; prazna oziroma nerešena naloga dobi 0. Prag za pozitivno Moodle oceno je **3 od 5 točk**. Individualna povratna informacija obravnava tudi napake v priznanih poskusih.
