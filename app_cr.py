@@ -37,7 +37,8 @@ def login():
 def validate_user_pass():
     username = request.form['username']
 
-    assert username in users, "Invalid username."  # hitro preverjanje
+    if username not in users:
+        return "Invalid username.", 400
 
     challenge = vp_library.generate_challenge()
     users[username]["challenge"] = challenge
@@ -66,14 +67,16 @@ def validate_response():
     # ne pa tudi zakaj
     if username not in users:
         message = "Invalid username"
-
-    recomputed = vp_library.generate_response_hmac_256(
-        bytes.fromhex(users[username]["key"]),
-        users[username]["challenge"])
-    if not constant_time.bytes_eq(recomputed.encode("utf8"), otp.encode("utf8")):
-        message = "Invalid OTP"
-
-    message = f"Welcome, {username}, provided response was correct."
+    elif users[username]["challenge"] is None:
+        message = "Request a challenge first."
+    else:
+        recomputed = vp_library.generate_response_hmac_256(
+            bytes.fromhex(users[username]["key"]),
+            users[username]["challenge"])
+        if constant_time.bytes_eq(recomputed.encode("utf8"), otp.encode("utf8")):
+            message = f"Welcome, {username}, provided response was correct."
+        else:
+            message = "Invalid OTP"
 
     return f'''
         <!doctype html>
