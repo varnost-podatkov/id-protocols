@@ -36,12 +36,6 @@ Tokrat bomo naše rešitve implementirali v spletno aplikacijo. Zato je pogoj za
 pip install flask
 ```
 
-Če delamo na računalniku v učilnici na UL FRI:
-
-```sh
-pip install --user flask
-```
-
 ## Naloga 1
 
 Pri tej nalogi bomo uporabili le Python. V datoteki `app_pwd.py` je implementirana spletna aplikacija z ogrodju Flask.
@@ -99,6 +93,4 @@ Naloga od vas zahteva implementacijo 2. in 3. koraka. Preden pričnete, dobro pr
 
 ## Oddaja
 
-Na Moodle oddajte `vp_library.py`, `FibHOTP.java`, `FibTOTP.java` in `FibChallengeResponse.java` kot posamezne izvorne datoteke, ne kot dodatni ZIP. Če uporabljate lastne pomožne datoteke, oddajte tudi te; pri celotni Mavenovi mapi ohranite strukturo `src/main/java/`. Knjižnice, `.venv/` in prevedene datoteke niso del oddaje.
-
-Ocenjuje se pet implementacij: dve Pythonovi funkciji in trije Javanski programi. Vsaka je vredna 1 točko za dejanski poskus, tudi če vsebuje napake; prazna oziroma nerešena naloga dobi 0. Prag za pozitivno Moodle oceno je **3 od 5 točk**. Individualna povratna informacija obravnava tudi napake v priznanih poskusih.
+Na Moodle oddajte `vp_library.py`, `FibHOTP.java`, `FibTOTP.java` in `FibChallengeResponse.java` kot posamezne izvorne datoteke, ne kot dodatni ZIP.
